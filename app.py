@@ -32,6 +32,20 @@ def create_app() -> Flask:
 
     # TASK 02 will add a /notes/<idx>/delete route here.
 
+    @app.route("/search")
+    def search():
+        q = (request.args.get("q") or "").strip()
+        if not q:
+            return redirect(url_for("home"))
+        q_lower = q.lower()
+        results = [
+            n for n in app.notes
+            if q_lower in n.get("title", "").lower()
+            or q_lower in n.get("body", "").lower()
+            or any(q_lower == t.lower() for t in n.get("tags", []))
+        ]
+        return render_template("search.html", results=results, query=q)
+
     return app
 
 
