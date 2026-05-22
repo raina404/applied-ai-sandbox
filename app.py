@@ -34,8 +34,7 @@ def create_app() -> Flask:
 
     @app.route("/search")
     def search():
-        q = (request.args.get("q") or "").strip()
-        if not q:
+        q = (request.args.get("q") or "").strip()[:200]        if not q:
             return redirect(url_for("home"))
         q_lower = q.lower()
         results = [
